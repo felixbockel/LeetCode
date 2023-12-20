@@ -1,0 +1,27 @@
+# Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+# An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+# Example 1:
+# Input: s = "anagram", t = "nagaram"
+# Output: true
+# Example 2:
+# Input: s = "rat", t = "car"
+# Output: false
+# Driver code
+
+class Solution:
+    def isAnagram(s,t):# -> bool:
+        dict_s={}
+        if len(s) != len(t):
+            return bool(0)
+        for i in range(len(s)):
+            if s[i] in dict_s:
+                dict_s[s[i]]+=1
+            else:
+                dict_s[s[i]]=1
+        for i in range(len(t)):
+            if t[i] in dict_s:
+                dict_s[t[i]]-=1
+        if max(dict_s.values()) == 0:
+            return bool(1)
+        else:
+            return bool(0)
