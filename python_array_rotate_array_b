@@ -1,0 +1,19 @@
+#Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
+#rotate 1 steps to the right: [7,1,2,3,4,5,6]
+#rotate 2 steps to the right: [6,7,1,2,3,4,5]
+#rotate 3 steps to the right: [5,6,7,1,2,3,4]
+
+class Solution:
+    def rotate(nums,k):
+        counter=0
+        counter_tries=1
+        if len(nums) != 1:
+            if k > len(nums)-1: # k = len(nums)-1 covers a full rotation. meaning k > len(nums)-1 the cycle starts from beginning again. 
+                div_k=int(k/len(nums)) # k has len(nums) stages for a full cycle
+                multi_k=int(div_k*len(nums))
+                step_cycle=k-multi_k
+                k=step_cycle
+            if k != 0:
+                cutoff=len(nums)-k-1 #to get index number
+                nums[(cutoff+1):],nums[:cutoff+1]=nums[:cutoff+1],nums[(cutoff+1):] #beginning part
+        return nums
