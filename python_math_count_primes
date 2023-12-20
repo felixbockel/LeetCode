@@ -1,0 +1,25 @@
+# Given an integer n, return the number of prime numbers that are strictly less than n.
+# Example 1:
+# Input: n = 10
+# Output: 4
+# Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
+# Example 2:
+# Input: n = 0
+# Output: 0
+# Example 3:
+# Input: n = 1
+# Output: 0
+
+class Solution:
+    def countPrimes(n): #self, n: int) -> int:
+        full_range=[False]
+        if n> 2:
+            full_range=[False]+[True]*(n-1)
+            for ii in range(2,int(n ** 0.5)+1):
+                if full_range[ii-1]: # if bool is true enter if. in if condition put the following bools to false as they are not primes -> 2 is a prime (True) but 4,6,8 is not. so set all others to false. 
+                    #print(ii,full_range[ii-1])
+                    for iii in range(ii*ii,n,ii):
+                        full_range[iii-1]=False
+                    #print(full_range)
+            return sum(full_range)-1 # my bool array starts with 1 as false and second is 2 with true. would be easier to start bool with zero so i dont need to add -1 in idex [x-1].the last value is always true in my case. therefore have to subtract it.
+        return sum(full_range)
