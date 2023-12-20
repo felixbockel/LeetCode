@@ -1,0 +1,102 @@
+# Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+# Symbol       Value
+# I             1
+# V             5
+# X             10
+# L             50
+# C             100
+# D             500
+# M             1000
+# For example, 2 is written as II in Roman numeral, just two ones added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
+# Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
+# I can be placed before V (5) and X (10) to make 4 and 9. 
+# X can be placed before L (50) and C (100) to make 40 and 90. 
+# C can be placed before D (500) and M (1000) to make 400 and 900.
+# Given a roman numeral, convert it to an integer.
+# Example 1:
+# Input: s = "III"
+# Output: 3
+# Explanation: III = 3.
+# Example 2:
+# Input: s = "LVIII"
+# Output: 58
+# Explanation: L = 50, V= 5, III = 3.
+# Example 3:
+# Input: s = "MCMXCIV"
+# Output: 1994
+# Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
+# Constraints:
+# 1 <= s.length <= 15
+# s contains only the characters ('I', 'V', 'X', 'L', 'C', 'D', 'M').
+# It is guaranteed that s is a valid roman numeral in the range [1, 3999].
+
+#method:its all done in a few dictionaries
+class Solution:
+    def romanToInt(s):#self, s: str) -> int:
+        # initial conditions to read roman letters
+        dict_roman={"I":0,"V":0,"X":0,"L":0,"C":0,"D":0,"M":0,"VI":0,"XI":0,"LX":0,"CX":0,"DC":0,"MC":0}
+        roman=['VI','XI','LX','CX','DC','MC','I','V','X','L','C','D','M']
+        numbers=[4,9,40,90,400,900,1,5,10,50,100,500,1000]
+        dict_idx={"I":[],"V":[],"X":[],"L":[],"C":[],"D":[],"M":[],"VI":[],"XI":[],"LX":[],"CX":[],"DC":[],"MC":[]}
+        # read s backwards
+        s=s[::-1]
+        # store idx and occurences of all roman letter that appear is s.
+        for i in range(len(s)):
+            if s[i] in dict_roman:
+                dict_roman[s[i]]+=1
+                dict_idx[s[i]].append(i)
+            if (i+1) < len(s):
+                if s[i]+s[i+1] in dict_roman:
+                    dict_roman[s[i]+s[i+1]]+=1
+                    dict_roman[s[i]]-=1
+                    dict_roman[s[i+1]]-=1
+                    dict_idx[s[i]+s[i+1]].append(i)
+                    if len(dict_idx[s[i]]) != 0:
+                        dict_idx[s[i]].remove(i)
+                    if len(dict_idx[s[i+1]]) != 0:
+                        dict_idx[s[i+1]].remove(i+1)
+        # delete all roman letters that have not appeared in s,convert from roman to latin numbers and perform addition of same roman letters.
+        dict_new={}
+        roman_letters_array=[]
+        for i in dict_roman:
+            if dict_roman[i] != 0:
+                idx_in_numbers=roman.index(i) # access roman number and get idx
+                short_mem=str(numbers[idx_in_numbers]) # get number equivalent to roman number
+                idx_i_to_dict=dict_idx[i]
+                if len(dict_idx[i]) != 1: # if there are more than 1 indexes (index array), perform addition so that index array becomes index value.
+                    short_mem=str(int(short_mem)*len(dict_idx[i]))
+                    idx_i_to_dict=[dict_idx[i][0]]
+                dict_new[short_mem]=idx_i_to_dict
+                roman_letters_array=roman_letters_array+[i]       
+        # for occurences ['I','V'],['X','L'],['C','D'] add integers together. at this stage length and position of values in dict_new.keys() and roman_letters_array is the same.
+        if 'I' in roman_letters_array and 'V' in roman_letters_array:
+            idx_in_numbers=roman_letters_array.index('I')
+            keysList = list(dict_new.keys())
+            added_ints=str(int(keysList[idx_in_numbers])+int(keysList[idx_in_numbers+1]))
+            dict_new.pop(keysList[idx_in_numbers]) # delete key in dictionary
+            dict_new[added_ints] = dict_new.pop(keysList[idx_in_numbers+1]) # replace key name with another in dictionary
+            roman_letters_array.remove('I')
+            roman_letters_array.remove('V')
+            roman_letters_array.append('V')
+        if 'X' in roman_letters_array and 'L' in roman_letters_array:
+            idx_in_numbers=roman_letters_array.index('X')
+            keysList = list(dict_new.keys())
+            added_ints=str(int(keysList[idx_in_numbers])+int(keysList[idx_in_numbers+1]))
+            dict_new.pop(keysList[idx_in_numbers]) # delete key in dictionary
+            dict_new[added_ints] = dict_new.pop(keysList[idx_in_numbers+1]) # replace key name with another in dictionary
+            roman_letters_array.remove('X')
+            roman_letters_array.remove('L')
+            roman_letters_array.append('L')
+            #print(dict_new,roman_letters_array)
+        if 'C' in roman_letters_array and 'D' in roman_letters_array:
+            idx_in_numbers=roman_letters_array.index('C')
+            keysList = list(dict_new.keys())
+            added_ints=str(int(keysList[idx_in_numbers])+int(keysList[idx_in_numbers+1]))
+            dict_new.pop(keysList[idx_in_numbers]) # delete key in dictionary
+            dict_new[added_ints] = dict_new.pop(keysList[idx_in_numbers+1]) # replace key name with another in dictionary
+        # add integers together now
+        int_number=int()
+        for i in dict_new.keys():
+            int_number+=int(i)
+        # print output
+        return int_number
