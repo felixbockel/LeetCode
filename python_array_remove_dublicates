@@ -1,0 +1,8 @@
+class Solution:
+    def removeDuplicates(nums):
+        k=0
+        for i in range(len(nums)-1,0,-1):
+            if nums[i] == nums[i-1]:
+                del nums[i]
+                k+=1
+        return k
