@@ -1,0 +1,16 @@
+class Solution:
+    def rotate(nums,k):
+        counter=0
+        counter_tries=1
+        if len(nums) != 1:
+            if k > len(nums)-1: # k = len(nums)-1 covers a full rotation. meaning k > len(nums)-1 the cycle starts from beginning again. 
+                div_k=int(k/len(nums)) # k has len(nums) stages for a full cycle
+                multi_k=int(div_k*len(nums))
+                step_cycle=k-multi_k
+                k=step_cycle
+            if k != 0:
+                cutoff=len(nums)-k-1 #to get index number
+                first_part=nums[:cutoff+1] #beginning part
+                second_part=nums[(cutoff+1):]#all the rest
+                nums[:]=second_part+first_part
+        return nums
